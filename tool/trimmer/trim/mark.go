@@ -182,13 +182,13 @@ func (t *Trimmer) markInclude(include *parser.Include, filename string) {
 }
 
 func (t *Trimmer) markKeptPart(ast *parser.Thrift, filename string) {
-	for _, constant := range ast.Constants {
-		t.markType(constant.Type, ast, filename)
-	}
-
-	for _, typedef := range ast.Typedefs {
-		t.markType(typedef.Type, ast, filename)
-	}
+	//for _, constant := range ast.Constants {
+	//	t.markType(constant.Type, ast, filename)
+	//}
+	//
+	//for _, typedef := range ast.Typedefs {
+	//	t.markType(typedef.Type, ast, filename)
+	//}
 
 	if !t.forceTrimming {
 		for _, str := range ast.Structs {

@@ -158,6 +158,11 @@ func (t *Trimmer) countStructs(ast *parser.Thrift) {
 	for _, v := range ast.Exceptions {
 		t.fieldsTrimmed += len(v.Fields)
 	}
+	t.fieldsTrimmed += len(ast.Constants)
+	t.fieldsTrimmed += len(ast.Typedefs)
+	for _, v := range ast.Enums {
+		t.fieldsTrimmed += len(v.Values)
+	}
 	for _, v := range ast.Includes {
 		t.countStructs(v.Reference)
 	}

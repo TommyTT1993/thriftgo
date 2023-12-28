@@ -22,8 +22,7 @@ import (
 func (t *Trimmer) traversal(ast *parser.Thrift, filename string) {
 	var listInclude []*parser.Include
 	for i := range ast.Includes {
-		if t.marks[filename][ast.Includes[i]] || len(ast.Includes[i].Reference.Constants)+
-			len(ast.Includes[i].Reference.Enums)+len(ast.Includes[i].Reference.Typedefs) > 0 {
+		if t.marks[filename][ast.Includes[i]] {
 			t.traversal(ast.Includes[i].Reference, filename)
 			listInclude = append(listInclude, ast.Includes[i])
 		}
@@ -74,6 +73,34 @@ func (t *Trimmer) traversal(ast *parser.Thrift, filename string) {
 		}
 	}
 	ast.Services = listService
+
+	var listConstant []*parser.Constant
+	for i := range ast.Constants {
+		if t.marks[filename][ast.Constants[i]] {
+			listConstant = append(listConstant, ast.Constants[i])
+			t.fieldsTrimmed -= 1
+		}
+	}
+	ast.Constants = listConstant
+
+	var listEnum []*parser.Enum
+	for i := range ast.Enums {
+		if t.marks[filename][ast.Enums[i]] {
+			listEnum = append(listEnum, ast.Enums[i])
+			t.fieldsTrimmed -= len(ast.Enums)
+		}
+	}
+	ast.Enums = listEnum
+
+	var listTypedef []*parser.Typedef
+	for i := range ast.Typedefs {
+		if t.marks[filename][ast.Typedefs[i]] {
+			listTypedef = append(listTypedef, ast.Typedefs[i])
+			t.fieldsTrimmed -= 1
+		}
+	}
+	ast.Typedefs = listTypedef
+
 	ast.Name2Category = nil
 	for _, inc := range ast.Includes {
 		inc.Used = nil
